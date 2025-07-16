@@ -6,16 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "insignias")
+@Table
+@Entity(name = "insignias")
 @Data @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Insignia {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idInsignia;
+
+    @Column(nullable = false)
     private String nome;
 }

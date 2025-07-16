@@ -6,45 +6,52 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Table(name = "pessoas")
+@Table
+@Entity(name = "pessoas")
 @Data @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Pessoa {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPessoa;
+
+    @Column(nullable = false)
     private String nome;
+    @Column(nullable = false)
+    private LocalDateTime dataNascimento;
+    @Column(nullable = false, length = 45)
     private String telefone;
+    @Column(nullable = false)
     private String email;
-    private LocalDate dataNascimento;
 
     @ManyToOne
-    @JoinColumn(name = "idTipoSanguineo")
     private TipoSanguineo tipoSanguineo;
 
     @OneToMany(mappedBy = "pessoa")
-    private List<Vinculo> vinculos;
+    private List<Responsavel> responsaveis;
 
     @OneToMany(mappedBy = "pessoa")
-    private List<DesafioConcluidoFeito> desafiosConcluidosFeitos;
+    private List<DadosSaude> dadosSaudes;
 
     @OneToMany(mappedBy = "pessoa")
-    private List<SaudeDado> saudeDados;
+    private List<DesafioEspecialidadeFeita> desafioEspecialidadeFeitas;
 
     @OneToMany(mappedBy = "pessoa")
-    private List<ProblemaSaude> problemasSaude;
+    private List<DesafioInsigniaFeita> desafioInsigniaFeitas;
 
     @OneToMany(mappedBy = "pessoa")
-    private List<DesafioFeito> desafiosFeitos;
+    private List<DesafioDistintivoFeita> desafioDistintivoFeitas;
 
-    @OneToMany(mappedBy = "pessoa")
-    private List<DesafioDeEspecialidadeFeita> desafiosDeEspecialidadeFeitas;
-
-    @OneToMany(mappedBy = "pessoa")
-    private List<NoiteAcampado> noitesAcampados;
+    @ManyToMany
+    @JoinTable(
+            name = "pessoas_acampamentos",
+            joinColumns = @JoinColumn(name = "idPessoa"),
+            inverseJoinColumns = @JoinColumn(name = "idAcampamento")
+    )
+    private List<Acampamento> acampamentos;
 }

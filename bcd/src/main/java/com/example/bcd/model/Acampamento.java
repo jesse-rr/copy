@@ -6,17 +6,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "acampamentos")
+@Table
+@Entity(name = "acampamentos")
 @Data @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Acampamento {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idAcampamento;
+
+    @Column(nullable = false)
     private String nome;
-    private LocalDate data;
+
+    @Column(nullable = false)
+    private LocalDateTime data;
 }

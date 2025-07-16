@@ -6,21 +6,27 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Table
-@Entity(name = "especialidades")
+@Entity(name = "desafios_distintivos_feitas")
 @Data @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Especialidade {
+public class DesafioDistintivoFeita {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idEspecialidade;
+    private Long idDesafioDistintivoFeita;
 
     @Column(nullable = false)
-    private String nome;
-
+    private LocalDateTime dataInicio;
+    @Column(nullable = false)
+    private LocalDateTime dataFim;
 
     @ManyToOne
-    private AreaDeConhecimento areaDeConhecimento;
+    private Pessoa pessoa;
+
+    @ManyToOne
+    private Distintivo distintivo;
 }

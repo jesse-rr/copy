@@ -6,16 +6,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.util.List;
 
-@Entity
-@Table(name = "tipo_sanguineos")
+@Table
+@Entity(name = "tipos_sanguineos")
 @Data @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class TipoSanguineo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTipoSanguineo;
+
+    @Column(nullable = false, length = 45)
     private String tipo;
+
+
+    @OneToMany(mappedBy = "tipoSanguineo")
+    private List<Pessoa> pessoas;
 }

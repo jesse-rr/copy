@@ -6,17 +6,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "responsaveis")
+@Table
+@Entity(name = "responsaveis")
 @Data @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Responsavel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idResponsavel;
 
+    @Column(nullable = false)
     private String nome;
+    @Column(nullable = false, length = 45)
     private String telefone;
+    @Column(nullable = false)
     private String email;
+
+
+    @ManyToOne
+    private Pessoa pessoa;
 }

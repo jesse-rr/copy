@@ -6,14 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "desafio_concluidos")
+@Table
+@Entity(name = "distintivos")
 @Data @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class DesafioConcluido {
+@AllArgsConstructor
+public class Distintivo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idDesafioConcluido;
-    private String descricao;
+    private Long idDistintivo;
+
+    @Column(nullable = false)
+    private String nome;
 }

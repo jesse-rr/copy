@@ -6,23 +6,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "vinculos")
+@Table
+@Entity(name = "desafios_insignias_feitas")
 @Data @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class Vinculo {
+@AllArgsConstructor
+public class DesafioInsigniaFeita {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idVinculo;
+    private Long idDesafioInsigniaFeita;
+
+    @Column(nullable = false)
+    private LocalDateTime data;
 
     @ManyToOne
-    @JoinColumn(name = "idPessoa")
     private Pessoa pessoa;
 
     @ManyToOne
-    @JoinColumn(name = "idResponsavel")
-    private Responsavel responsavel;
+    private Insignia insignia;
 }

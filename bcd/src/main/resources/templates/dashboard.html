@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Ramo Lobinho</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #1c1e21;
+        }
+        .header {
+            background-color: #004a99;
+            color: white;
+            padding: 20px 40px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            gap: 20px;
+            justify-content: center;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex-basis: 400px;
+            flex-grow: 1;
+            min-height: 300px;
+        }
+        .card h2 {
+            margin-top: 0;
+            color: #004a99;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 5px 0;
+        }
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .search-form input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .search-form button {
+            padding: 8px 12px;
+            border: none;
+            background-color: #0056b3;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #result-details p {
+            margin: 5px 0;
+        }
+        #result-details strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <h1>Dashboard de Progressões - Ramo Lobinho</h1>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h2>Consultar Jovem por ID</h2>
+        <form id="search-form" class="search-form">
+            <input type="number" id="jovemId" name="id" placeholder="Digite o ID do Jovem" required>
+            <button type="submit">Buscar</button>
+        </form>
+        <div id="result-details"></div>
+    </div>
+
+    <div class="card">
+        <h2>Jovens Aptos para o Cruzeiro do Sul</h2>
+        <div th:if="${not #lists.isEmpty(aptosCruzeiroDoSul)}">
+            <ul>
+                <li th:each="jovem : ${aptosCruzeiroDoSul}" th:text="${jovem.nome}"></li>
+            </ul>
+        </div>
+        <div th:if="${#lists.isEmpty(aptosCruzeiroDoSul)}">
+            <p>Nenhum jovem apto no momento.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Lista de Jovens</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="pessoa : ${pessoas}">
+                <td th:text="${pessoa.idPessoa}"></td>
+                <td th:text="${pessoa.nome}"></td>
+                <td th:text="${pessoa.email}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>Lista de Especialidades</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Área de Conhecimento</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="especialidade : ${especialidades}">
+                <td th:text="${especialidade.nome}"></td>
+                <td th:text="${especialidade.areaDeConhecimento.nome}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>Lista de Insígnias</h2>
+        <ul>
+            <li th:each="insignia : ${insignias}" th:text="${insignia.nome}"></li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    document.getElementById('search-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const jovemId = document.getElementById('jovemId').value;
+        const resultDiv = document.getElementById('result-details');
+        resultDiv.innerHTML = '<p>Buscando...</p>';
+
+        fetch(`/api/jovem/${jovemId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Jovem não encontrado.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const dataNascimento = new Date(data.dataNascimento).toLocaleDateString('pt-BR');
+                resultDiv.innerHTML = `
+                    <h3>Detalhes de ${data.nome}</h3>
+                    <p><strong>ID:</strong> ${data.id}</p>
+                    <p><strong>Email:</strong> ${data.email}</p>
+                    <p><strong>Telefone:</strong> ${data.telefone}</p>
+                    <p><strong>Data de Nascimento:</strong> ${dataNascimento}</p>
+                `;
+            })
+            .catch(error => {
+                resultDiv.innerHTML = `<p style="color: red;">${error.message}</p>`;
+            });
+    });
+</script>
+
+</body>
+</html>
